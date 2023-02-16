@@ -2,10 +2,9 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 function Chat({ user, room, sokit }) {
-
   const [currentMessage, setMessage] = useState("");
   const [datas, setData] = useState([]);
-  
+
   const sendMessage = async () => {
     if (currentMessage !== "") {
       let messageData = {
@@ -13,6 +12,7 @@ function Chat({ user, room, sokit }) {
         name: user,
         message: currentMessage,
         time: new Date().getHours(Date.now()) + ":" + new Date().getMinutes(),
+        img: <img className=" w-10" src="/user.png"></img>,
       };
       await sokit.emit("send_message", messageData);
       setData((list) => [...list, messageData]);
@@ -23,7 +23,6 @@ function Chat({ user, room, sokit }) {
     sokit.on("receive-message", (data) => {
       setData((list) => [...list, data]);
     });
-   
   }, [sokit]);
 
   return (
@@ -33,9 +32,12 @@ function Chat({ user, room, sokit }) {
           <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
             {datas.map((key) => {
               return (
-                <div>
+                <div key={Math.random()}>
                   {user === key.name ? (
-                    <div className="flex w-full mt-4 space-x-3  max-w-xs ml-auto justify-end">
+                    <div
+                      key={Math.random()}
+                      className="flex w-full mt-4 space-x-3  max-w-xs ml-auto justify-end"
+                    >
                       <div>
                         <div className="bg-blue-600 text-white p-3 rounded-l-lg rounded-br-lg">
                           <p className="text-sm">{key.message}</p>
